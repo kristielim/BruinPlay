@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>{{title}}</title>
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+	<div id="overlay">
+        <div id="box">
+            <h1>Album Name</h1>
+            	<table class="table">
+				  <thead>
+				    <tr>
+				      <th scope="col">Song</th>
+				      <th scope="col"></th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				      <td>Song 1</td>
+				      <td><audio type="audio/mpeg" src="https://raw.githubusercontent.com/acm-hackschool-f17/BruinPlayResources/master/audio/nkansal-mix/heaven.mp3" preload="auto" controls></audio></td>
+				    </tr>
+				    <tr>
+				      <td>Song 2</td>
+				      <td>Thornton</td>
+				    </tr>
+				  </tbody>
+				</table>
+
+	            <button type="button" class="btn btn-primary" onClick="setOverlayDisplay(false)">Close</button>
+
+
+        </div>
+    </div>
+	<h1>{{title}}</h1>
+	<div class='viewby'>
+		<a href='/albums'>View by Album</a>
+		<a href='/'>View by Song</a>
+	</div>
+	<div class="container">
+		<div class="row">
+			{{#each albums}}
+			<div class="col-lg-4 col-md-6 col-sm-12">
+				<div class="tile">
+					<p class="title">{{this.title}}</p>
+					<p class="artistName">{{this.artistName}}</p>
+					<img src={{this.coverSrc}} onclick="loadTable('{{this.songs}}');setOverlayDisplay(true)">
+				</div>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+	<script src="/js/script.js"></script>
+</body>
+
+</html>

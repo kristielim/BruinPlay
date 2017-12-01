@@ -12,11 +12,12 @@
 	<div id="overlay">
         <div id="box">
             <h1>Add a Song</h1>
-            <form id="addsong" method="POST" action="/songs/add" enctype="multipart/form-data">
+            <form id="addsong" method="POST" action="/songs/add">
                 <input type="text" id="add_title" name="title" placeholder="Title..." />
                 <input type="text" id="add_artist" name="artistName" placeholder="Artist Name..." />
                 <input type="text" id="add_album" name="albumName" placeholder="Album Name..." />
-                <p>Audio Source</p><input type="file" id="add_audiosrc" name="audioSrc" />
+                <input type="text" id="add_audiosrc" name="audioSrc" placeholder="URL of Audio..."/>
+                <input type="text" id="add_audiosrc" name="image" placeholder="URL of Image..."/>
                 <div class="closeoverlay">
 	                <input type="submit" value="Add Song" />
 	                <input type="button" value="Close" onClick="setOverlayDisplay(false)" />
@@ -26,11 +27,15 @@
     </div>
 	<h1>{{title}}</h1>
 	<button type="button" class="btn btn-primary" onClick="setOverlayDisplay(true)">Add a Song</button>
+	<div class='viewby'>
+		<a href='/albums'>View by Album</a>
+		<a href='/'>View by Song</a>
+	</div>
 	<div class="container">
 		<div class="row">
 			{{#each songs}}
 			<div class="col-lg-4 col-md-6 col-sm-12">
-				<div class="song">
+				<div class="tile">
 					<p class="title">{{this.title}}</p>
 					<p class="artistName">{{this.artistName}}</p>
 					
@@ -40,6 +45,7 @@
 					{{#if albumCoverSrc}}
 						<img src={{this.albumCoverSrc}} onclick="playSong('{{this.audioSrc}}','{{this.title}}','{{this.artistName}}')">
 					{{/if}}
+					<a href="/songs/delete/{{this.title}}" class="delete">Delete</a>
 				</div>
 			</div>
 			{{/each}}

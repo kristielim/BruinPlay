@@ -13,6 +13,21 @@ function setOverlayDisplay(show) {
     document.getElementById('overlay').style.display = show ? "block" : "none";
 }
 
+// songs is a list of song objects, each object has a title and an audioSrc
+function loadTable(songs) {
+	console.log(typeof(songs));
+	console.log(songs[0].title);
+	const table = $('tbody');
+	let content = '';
+	for(let i = 0; i < songs.length; i++) {
+		content +='<tr><td>';
+		content += songs[i].title;
+		content += '</td><td>';
+		content += '<audio type="audio/mpeg" src=' + songs[i].audioSrc + ' preload="auto" controls></audio>';
+		content += '</td></tr>';
+	}
+	table.html(content);
+}
 /*
 function attachEventHandlers() {
 	$('.image').on('click', handleImageClick);

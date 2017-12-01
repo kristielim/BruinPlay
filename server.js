@@ -6,6 +6,7 @@ var path = require('path');
 
 var app = express();
 var currentSong = initialSongs();
+var currentAlbum = getAlbums(currentSong);
 
 app.set('view engine', 'hbs');
 app.use(express.static('public'));
@@ -25,6 +26,14 @@ app.get("/", (request, response) => {
 	})
 });
 
+app.get("/albums", (request, response) => {
+	response.render("albums", {
+		title: "Bruin Play",
+		content: "Hello, World!",
+		albums: currentAlbum
+	})
+});
+
 // 6) TODO: Add book input by the form to our list of books on the server.
 /**
  * Define the route to add a book to the library. We are posted the title, author, isbn,
@@ -37,37 +46,15 @@ app.post('/songs/add', function(request, response) {
 	let title = request.body.title;
 	let artistName = request.body.artistName;
 	let albumName = request.body.albumName;
-
-	var form = new formidable.IncomingForm();
-    form.parse(request, function(err, fields, files) {
-    	console.log('form is being processed');
-        // `file` is the name of the <input> field of type `file`
-        var old_path = files.audioSrc.path,
-            file_size = files.audioSrc.size,
-            file_ext = files.audioSrc.name.split('.').pop(),
-            index = old_path.lastIndexOf('/') + 1,
-            file_name = old_path.substr(index),
-            new_path = path.join(process.env.PWD, '/uploads/', file_name + '.' + file_ext);
-            console.log('new path is ' + new_path);
-        fs.readFile(old_path, function(err, data) {
-            fs.writeFile(new_path, data, function(err) {
-                fs.unlink(old_path, function(err) {
-                    if (err) {
-                        res.status(500);
-                        res.json({'success': false});
-                    } else {
-                        res.status(200);
-                        res.json({'success': true});
-                    }
-                });
-            });
-        });
-        
-        let audioSrc = new_path;
-    });
-
-	let albumCoverSrc = "https://raw.githubusercontent.com/acm-hackschool-f17/BruinPlayResources/master/cover_art/nkansal-mix/alien.jpg";
-	let audioImageSrc = null;
+    let audioSrc = request.body.audioSrc;
+    if(albumName != '') {
+		var albumCoverSrc = request.body.image;
+		var audioImageSrc = null;
+    }
+	else {
+		var audioImageSrc = request.body.audioImageSrc;
+		var albumCoverSrc = null;
+	}
 	
 	if (title.length > 0 && artistName.length > 0 && albumName.length > 0) {
 		currentSong.splice(0, 0, {audioSrc, audioImageSrc, title, artistName, albumName, albumCoverSrc});
@@ -90,50 +77,40 @@ app.get('/error', function (request, response) {
  * give one, and once we do, we remove it (see Array.splice, MDN), and stop checking, 
  * to immediately refresh the library.
  */
- /*
-app.get('/books/delete/:isbn', function(request, response) {
-	var isbn = request.params.isbn;
-	for (var i = 0; i < books.length; i++) {
-		if (books[i].isbn === isbn) {
-			books.splice(i, 1);
+ 
+app.get('/songs/delete/:title', function(request, response) {
+	var title = request.params.title;
+	for (var i = 0; i < currentSong.length; i++) {
+		if (currentSong[i].title === title) {
+			currentSong.splice(i, 1);
 			break;
 		}
 	}
 
-	response.redirect('/library');
+	response.redirect('/');
 });
-*/
 
-
-function processForm(req) {
-	var form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields, files) {
-    	console.log('form is being processed');
-        // `file` is the name of the <input> field of type `file`
-        var old_path = files.audioSrc.path,
-            file_size = files.audioSrc.size,
-            file_ext = files.audioSrc.name.split('.').pop(),
-            index = old_path.lastIndexOf('/') + 1,
-            file_name = old_path.substr(index),
-            new_path = path.join(process.env.PWD, '/uploads/', file_name + '.' + file_ext);
-            console.log('new path is ' + new_path);
-        fs.readFile(old_path, function(err, data) {
-            fs.writeFile(new_path, data, function(err) {
-                fs.unlink(old_path, function(err) {
-                    if (err) {
-                        res.status(500);
-                        res.json({'success': false});
-                    } else {
-                        res.status(200);
-                        res.json({'success': true});
-                    }
-                });
-            });
-        });
-        
-        return new_path;
-    });
-
+// returns a list of albums
+// each album has a title, artist, and list of songs
+function getAlbums(currentSong) {
+	let returnAlbums = [{
+		"title": "No Album",
+		"artistName": "Mixed Artists",
+		"coverSrc": "https://d2qqvwdwi4u972.cloudfront.net/static/img/default_album.png",
+		"songs": []
+	}]
+	for (song of currentSong) {
+		var albumOfSong = song.albumName;
+		if(!albumOfSong) albumOfSong = "No Album";
+		albumIndex = returnAlbums.findIndex(x => x.title === albumOfSong);
+		if(albumIndex >= 0) {
+			var songInfo = {"title": song.title, "audioSrc": song.audioSrc};
+			returnAlbums[albumIndex].songs.push(songInfo);
+		} else {
+			returnAlbums.push({"title": albumOfSong, "artistName": song.artistName, "coverSrc": song.albumCoverSrc, "songs": [{"title": song.title, "audioSrc": song.audioSrc}]});
+		}
+	}
+	return returnAlbums;
 }
 
 // TODO: Get music resources:

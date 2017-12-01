@@ -1,5 +1,14 @@
+.viewby {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 20px;
+}
+
 .closeoverlay {
-	padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .btn-file {
@@ -82,14 +91,15 @@ img {
 	border-radius: 10px;
 }
 
-.song {
+.tile {
 	border: 2px solid gray;
 	padding: 12px;
-	margin: 2px;
+	margin: 10px;
+    margin-bottom: 30px;
 	border-radius: 10px;
 }
 
-audio {
+#player {
 	position: fixed;
 	bottom: 0;
 	width: 100vw;
