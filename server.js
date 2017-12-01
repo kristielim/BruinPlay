@@ -1,5 +1,8 @@
 var express = require("express");
 var bodyParser = require('body-parser');
+var formidable = require('formidable');
+var fs = require('fs');
+var path = require('path');
 
 var app = express();
 var currentSong = initialSongs();
@@ -34,7 +37,35 @@ app.post('/songs/add', function(request, response) {
 	let title = request.body.title;
 	let artistName = request.body.artistName;
 	let albumName = request.body.albumName;
-	let audioSrc = "https://raw.githubusercontent.com/acm-hackschool-f17/BruinPlayResources/master/audio/nkansal-mix/space.mp3";
+
+	var form = new formidable.IncomingForm();
+    form.parse(request, function(err, fields, files) {
+    	console.log('form is being processed');
+        // `file` is the name of the <input> field of type `file`
+        var old_path = files.audioSrc.path,
+            file_size = files.audioSrc.size,
+            file_ext = files.audioSrc.name.split('.').pop(),
+            index = old_path.lastIndexOf('/') + 1,
+            file_name = old_path.substr(index),
+            new_path = path.join(process.env.PWD, '/uploads/', file_name + '.' + file_ext);
+            console.log('new path is ' + new_path);
+        fs.readFile(old_path, function(err, data) {
+            fs.writeFile(new_path, data, function(err) {
+                fs.unlink(old_path, function(err) {
+                    if (err) {
+                        res.status(500);
+                        res.json({'success': false});
+                    } else {
+                        res.status(200);
+                        res.json({'success': true});
+                    }
+                });
+            });
+        });
+        
+        let audioSrc = new_path;
+    });
+
 	let albumCoverSrc = "https://raw.githubusercontent.com/acm-hackschool-f17/BruinPlayResources/master/cover_art/nkansal-mix/alien.jpg";
 	let audioImageSrc = null;
 	
@@ -42,13 +73,13 @@ app.post('/songs/add', function(request, response) {
 		currentSong.splice(0, 0, {audioSrc, audioImageSrc, title, artistName, albumName, albumCoverSrc});
 		response.redirect('/');
 	} else {
-		console.log("You tried to add an invalid song into the elibrary.");
+		console.log("You tried to add an invalid song.");
 		response.redirect('/error');
 	}
 });
 
 app.get('/error', function (request, response) {
-	response.send('The song is invalid.');
+	response.send('The song is invalid. A song must have a title, audio source, and an image. The image should be an album cover if the song is part of an album. Please go back and try again.');
 });
 
 // 7) TODO: Delete book specified by the client.
@@ -72,6 +103,38 @@ app.get('/books/delete/:isbn', function(request, response) {
 	response.redirect('/library');
 });
 */
+
+
+function processForm(req) {
+	var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+    	console.log('form is being processed');
+        // `file` is the name of the <input> field of type `file`
+        var old_path = files.audioSrc.path,
+            file_size = files.audioSrc.size,
+            file_ext = files.audioSrc.name.split('.').pop(),
+            index = old_path.lastIndexOf('/') + 1,
+            file_name = old_path.substr(index),
+            new_path = path.join(process.env.PWD, '/uploads/', file_name + '.' + file_ext);
+            console.log('new path is ' + new_path);
+        fs.readFile(old_path, function(err, data) {
+            fs.writeFile(new_path, data, function(err) {
+                fs.unlink(old_path, function(err) {
+                    if (err) {
+                        res.status(500);
+                        res.json({'success': false});
+                    } else {
+                        res.status(200);
+                        res.json({'success': true});
+                    }
+                });
+            });
+        });
+        
+        return new_path;
+    });
+
+}
 
 // TODO: Get music resources:
 // Example resources: https://raw.githubusercontent.com/acm-hackschool-f17/BruinPlayResources/master/resources.json

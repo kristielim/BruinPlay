@@ -12,13 +12,15 @@
 	<div id="overlay">
         <div id="box">
             <h1>Add a Song</h1>
-            <form id="addsong" method="POST" action="/songs/add">
+            <form id="addsong" method="POST" action="/songs/add" enctype="multipart/form-data">
                 <input type="text" id="add_title" name="title" placeholder="Title..." />
                 <input type="text" id="add_artist" name="artistName" placeholder="Artist Name..." />
                 <input type="text" id="add_album" name="albumName" placeholder="Album Name..." />
-
-                <input type="submit" value="Add Song" />
-                <input type="button" value="Close" onClick="setOverlayDisplay(false)" />
+                <p>Audio Source</p><input type="file" id="add_audiosrc" name="audioSrc" />
+                <div class="closeoverlay">
+	                <input type="submit" value="Add Song" />
+	                <input type="button" value="Close" onClick="setOverlayDisplay(false)" />
+	            </div>
             </form>
         </div>
     </div>
