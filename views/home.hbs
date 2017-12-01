@@ -1,9 +1,55 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>{{title}}</title>
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
+
 <body>
-	{{content}}
+	<div id="overlay">
+        <div id="box">
+            <h1>Add a Song</h1>
+            <form id="addsong" method="POST" action="/songs/add">
+                <input type="text" id="add_title" name="title" placeholder="Title..." />
+                <input type="text" id="add_artist" name="artistName" placeholder="Artist Name..." />
+                <input type="text" id="add_album" name="albumName" placeholder="Album Name..." />
+
+                <input type="submit" value="Add Song" />
+                <input type="button" value="Close" onClick="setOverlayDisplay(false)" />
+            </form>
+        </div>
+    </div>
+	<h1>{{title}}</h1>
+	<button type="button" class="btn btn-primary" onClick="setOverlayDisplay(true)">Add a Song</button>
+	<div class="container">
+		<div class="row">
+			{{#each songs}}
+			<div class="col-lg-4 col-md-6 col-sm-12">
+				<div class="song">
+					<p class="title">{{this.title}}</p>
+					<p class="artistName">{{this.artistName}}</p>
+					
+					{{#if audioImageSrc}}
+						<img src={{this.audioImageSrc}} onclick="playSong('{{this.audioSrc}}','{{this.title}}','{{this.artistName}}')">
+					{{/if}}
+					{{#if albumCoverSrc}}
+						<img src={{this.albumCoverSrc}} onclick="playSong('{{this.audioSrc}}','{{this.title}}','{{this.artistName}}')">
+					{{/if}}
+				</div>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+	<div class="nowplaying">
+		<p>Now Playing:</p>
+		<p id="song">Song</p>
+		<p id="artist">Artist</p>
+	</div>
+	<audio id="player" type="audio/mpeg" src={{songs.[15].audioSrc}} preload="auto" controls></audio>
+	<script src="/js/script.js"></script>
 </body>
+
 </html>
