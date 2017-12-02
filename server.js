@@ -9,6 +9,11 @@ var currentSong = initialSongs();
 var currentAlbum = getAlbums(currentSong);
 
 app.set('view engine', 'hbs');
+var Handlebars = require('hbs');
+Handlebars.registerHelper('json', function(context) {
+    return JSON.stringify(context);
+});
+
 app.use(express.static('public'));
 
 // POST form data is "url-encoded", so decode that into JSON for us
@@ -52,12 +57,13 @@ app.post('/songs/add', function(request, response) {
 		var audioImageSrc = null;
     }
 	else {
-		var audioImageSrc = request.body.audioImageSrc;
+		var audioImageSrc = request.body.image;
 		var albumCoverSrc = null;
 	}
 	
-	if (title.length > 0 && artistName.length > 0 && albumName.length > 0) {
+	if (title.length > 0 && artistName.length > 0) {
 		currentSong.splice(0, 0, {audioSrc, audioImageSrc, title, artistName, albumName, albumCoverSrc});
+		currentAlbum = getAlbums(currentSong);
 		response.redirect('/');
 	} else {
 		console.log("You tried to add an invalid song.");
@@ -83,6 +89,7 @@ app.get('/songs/delete/:title', function(request, response) {
 	for (var i = 0; i < currentSong.length; i++) {
 		if (currentSong[i].title === title) {
 			currentSong.splice(i, 1);
+			currentAlbum = getAlbums(currentSong);
 			break;
 		}
 	}

@@ -1,3 +1,7 @@
+.table {
+
+}
+
 .viewby {
     display: flex;
     flex-direction: column;
@@ -54,6 +58,7 @@
     background-color: #FAFAFA;
     border: 1px solid #EAEAEA;
     box-shadow: 0px 0px 6px #333;
+    overflow: scroll;
 }
 
 #overlay #box h2 {
@@ -80,7 +85,7 @@
 }
 
 .artistName {
-	color: blue;
+	color: #1B4F72;
 }
 
 img {
@@ -89,6 +94,11 @@ img {
 	display: block;
 	margin: auto;
 	border-radius: 10px;
+}
+
+img:hover {
+    cursor: pointer;
+    opacity: 0.5;
 }
 
 .tile {

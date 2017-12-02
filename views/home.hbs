@@ -3,6 +3,8 @@
 
 <head>
 	<title>{{title}}</title>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="/css/style.css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -20,9 +22,9 @@
                 <input type="text" id="add_audiosrc" name="image" placeholder="URL of Image..."/>
                 <div class="closeoverlay">
 	                <input type="submit" value="Add Song" />
-	                <input type="button" value="Close" onClick="setOverlayDisplay(false)" />
 	            </div>
             </form>
+            <button type="button" class="btn btn-primary" onClick="setOverlayDisplay(false)">Close</button>
         </div>
     </div>
 	<h1>{{title}}</h1>
@@ -52,7 +54,6 @@
 		</div>
 	</div>
 	<div class="nowplaying">
-		<p>Now Playing:</p>
 		<p id="song">Song</p>
 		<p id="artist">Artist</p>
 	</div>

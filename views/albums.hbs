@@ -48,7 +48,7 @@
 				<div class="tile">
 					<p class="title">{{this.title}}</p>
 					<p class="artistName">{{this.artistName}}</p>
-					<img src={{this.coverSrc}} onclick="loadTable('{{this.songs}}');setOverlayDisplay(true)">
+					<img src={{this.coverSrc}} onclick="loadTable({{json this.songs}});setOverlayDisplay(true)">
 				</div>
 			</div>
 			{{/each}}

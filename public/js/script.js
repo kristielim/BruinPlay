@@ -6,6 +6,10 @@ function playSong(audioSrc, song, artist) {
 	document.getElementById('player').play();
 	songLabel.text(song);
 	artistLabel.text(artist);
+
+	player.show();
+	songLabel.show();
+	artistLabel.show();
 	console.log(audioSrc);
 }
 
@@ -16,7 +20,7 @@ function setOverlayDisplay(show) {
 // songs is a list of song objects, each object has a title and an audioSrc
 function loadTable(songs) {
 	console.log(typeof(songs));
-	console.log(songs[0].title);
+	console.log(songs);
 	const table = $('tbody');
 	let content = '';
 	for(let i = 0; i < songs.length; i++) {
@@ -28,36 +32,12 @@ function loadTable(songs) {
 	}
 	table.html(content);
 }
-/*
-function attachEventHandlers() {
-	$('.image').on('click', handleImageClick);
-}
-
-function handleImageClick(event) {
-	const target = $(event.target);
-	const images = $('.photo-row .image');
-	console.log(images);
-	const info = $('.info-pane');
-	const preview = $('.preview-image');
-
-	if (target.hasClass('selected')) {
-		images.removeClass('not-selected');
-		target.removeClass('selected');
-		info.fadeOut(200);
-	}
-	else {
-		images.removeClass('selected');
-		images.addClass('not-selected');
-
-		target.addClass('selected');
-		target.removeClass('not-selected');
-
-		info.fadeIn(200);
-		preview.css('background-image', target.css('background-image'));
-	}
-}
 
 $('document').ready(function() {
-	attachEventHandlers();
+	const player = $('#player');
+	const songLabel = $('.nowplaying #song');
+	const artistLabel = $('.nowplaying #artist');
+	player.hide();
+	songLabel.hide();
+	artistLabel.hide();
 });
-*/
